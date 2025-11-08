@@ -41,3 +41,25 @@ Users can monitor live data on a dashboard or mobile app.
 If the water level is too low or too high, an alert is triggered.
 
 A relay module can automatically start/stop the pump.
+
+Software and Tools
+
+Arduino IDE / PlatformIO
+
+Blynk / ThingSpeak / Firebase
+
+ESP32 Board Package
+
+Wi-Fi Network for Data Transfer
+
+Applications
+
+Water tank level monitoring
+
+Flood detection systems
+
+Agricultural irrigation systems
+
+Industrial water management
+
+Smart city water distribution
