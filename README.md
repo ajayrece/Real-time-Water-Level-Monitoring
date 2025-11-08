@@ -63,3 +63,6 @@ Agricultural irrigation systems
 Industrial water management
 
 Smart city water distribution
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/57b9610f-13be-46da-b420-10a968dde660" />
+
