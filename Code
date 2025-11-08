@@ -1,0 +1,70 @@
+#include <WiFi.h>
+#include "ThingSpeak.h"
+
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+unsigned long channelID = YOUR_CHANNEL_ID;
+const char* writeAPIKey = "YOUR_WRITE_API_KEY";
+
+WiFiClient client;
+
+#define TRIG_PIN 5
+#define ECHO_PIN 18
+
+const int tankHeight = 30; // cm
+
+long duration;
+float distance;
+float waterLevel;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWi-Fi connected!");
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  duration = pulseIn(ECHO_PIN, HIGH);
+  distance = duration * 0.034 / 2;
+
+  if (distance <= tankHeight)
+    waterLevel = tankHeight - distance;
+  else
+    waterLevel = 0;
+
+  Serial.print("Water Level: ");
+  Serial.print(waterLevel);
+  Serial.println(" cm");
+
+  ThingSpeak.setField(1, waterLevel);
+  int statusCode = ThingSpeak.writeFields(channelID, writeAPIKey);
+
+  if (statusCode == 200)
+    Serial.println("Data uploaded to ThingSpeak");
+  else {
+    Serial.print("Upload error: ");
+    Serial.println(statusCode);
+  }
+
+  if (waterLevel < 5)
+    Serial.println("ALERT: Water Level LOW!");
+  else if (waterLevel > tankHeight - 2)
+    Serial.println("ALERT: Water Level HIGH!");
+
+  delay(15000);
+}
